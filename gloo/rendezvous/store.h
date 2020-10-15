@@ -38,6 +38,11 @@ class Store {
     // Derived Store implementations should override this function.
     wait(keys);
   }
+  virtual std::string str() const {
+      std::stringstream ss;
+      ss << "gloo::rendezvous::Store()";
+      return ss.str();
+  }
 
 };
 

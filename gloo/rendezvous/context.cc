@@ -6,6 +6,7 @@
  * LICENSE file in the root directory of this source tree.
  */
 
+#include <iostream>
 #include "gloo/rendezvous/context.h"
 
 #include "gloo/common/logging.h"
@@ -34,6 +35,12 @@ std::vector<char> Context::extractAddress(
 void Context::connectFullMesh(
     rendezvous::Store& store,
     std::shared_ptr<transport::Device>& dev) {
+  
+  std::cout<<"Context::connectFullMesh"
+           <<", rank: "<<rank
+           <<", size: "<<size
+           <<", base: "<<base
+           <<std::endl;
   std::vector<char> allBytes;
 
   // Create pairs
