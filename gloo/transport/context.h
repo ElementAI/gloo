@@ -41,6 +41,15 @@ class Context {
 
   virtual ~Context();
 
+  virtual std::string str() const {
+      std::stringstream ss;
+      ss << "gloo::transport::Context("
+        <<"rank = "<<rank
+        <<", size = "<<size
+        <<")";
+      return ss.str();
+  }
+
   const int rank;
   const int size;
 

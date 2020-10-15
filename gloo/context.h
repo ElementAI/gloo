@@ -28,6 +28,16 @@ class Context {
   Context(int rank, int size, int base = 2);
   virtual ~Context();
 
+  virtual std::string str() const {
+      std::stringstream ss;
+      ss << "gloo::Context("
+        <<"rank = "<<rank
+        <<", size = "<<size
+        <<", base = "<<base
+        <<")";
+      return ss.str();
+  }
+
   const int rank;
   const int size;
   int base;

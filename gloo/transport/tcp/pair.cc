@@ -11,6 +11,7 @@
 #include <array>
 #include <algorithm>
 #include <sstream>
+#include <iostream>
 
 #include <errno.h>
 #include <fcntl.h>
@@ -195,6 +196,10 @@ void Pair::listen() {
 }
 
 void Pair::connect(const Address& peer) {
+  std::cout<<"gloo::transport::tcp::Pair::connect("
+    <<"pair = "<<str()
+    <<"peer = "<<peer.str()
+    <<")"<<std::endl;
   std::unique_lock<std::mutex> lock(m_);
   int rv;
   socklen_t addrlen;
@@ -236,9 +241,13 @@ void Pair::connect(const Address& peer) {
 
   // self_ < peer_; we are listening side.
   if (rv < 0) {
+    std::cout<<"[gloo::transport::tcp::Pair::connect] listening side, waiting for other side to connect."<<std::endl;
     waitUntilConnected(lock, true);
+    std::cout<<"[gloo::transport::tcp::Pair::connect] connection established."<<std::endl;
     return;
   }
+  
+  std::cout<<"[gloo::transport::tcp::Pair::connect] connecting side, connecting to peer."<<std::endl;
 
   // self_ > peer_; we are connecting side.
   // First destroy listening socket.
@@ -274,6 +283,7 @@ void Pair::connect(const Address& peer) {
 
   // Wait for connection to complete
   waitUntilConnected(lock, true);
+  std::cout<<"[gloo::transport::tcp::Pair::connect] connection established."<<std::endl;
 }
 
 ssize_t Pair::prepareWrite(
@@ -841,6 +851,11 @@ void Pair::unregisterBuffer(Buffer* buf) {
 
 // changeState must only be called when holding lock.
 void Pair::changeState(state nextState) noexcept {
+  std::cout<<"gloo::transport::tcp::Pair::changeState("
+    <<"pair = "<<str()
+    <<", state = "<<state_
+    <<", nextState = "<<nextState
+    <<")"<<std::endl;
   if (nextState == CLOSED) {
     switch (state_) {
       case INITIALIZING:

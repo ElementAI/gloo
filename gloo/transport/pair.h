@@ -21,6 +21,13 @@ class Pair {
  public:
   virtual ~Pair() = 0;
 
+  virtual std::string str() const {
+      std::stringstream ss;
+      ss << "gloo::transport::Pair("
+        <<")";
+      return ss.str();
+  }
+  
   virtual const Address& address() const = 0;
 
   virtual void connect(const std::vector<char>& bytes) = 0;

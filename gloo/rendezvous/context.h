@@ -31,6 +31,16 @@ class Context : public ::gloo::Context {
       Store& store,
       std::shared_ptr<transport::Device>& dev);
 
+  virtual std::string str() const {
+      std::stringstream ss;
+      ss << "gloo::rendezvous::Context("
+        <<"rank = "<<rank
+        <<", size = "<<size
+        <<", base = "<<base
+        <<")";
+      return ss.str();
+  }
+
  protected:
   std::vector<char> extractAddress(std::vector<char>& allAddrs, int i);
 

@@ -11,6 +11,7 @@
 
 #include "gloo/common/logging.h"
 #include "gloo/transport/address.h"
+#include "gloo/transport/tcp/address.h"
 
 namespace gloo {
 namespace rendezvous {
@@ -36,22 +37,26 @@ void Context::connectFullMesh(
     rendezvous::Store& store,
     std::shared_ptr<transport::Device>& dev) {
   
-  std::cout<<"Context::connectFullMesh"
-           <<", rank: "<<rank
-           <<", size: "<<size
-           <<", base: "<<base
-           <<std::endl;
+  std::cout<<"gloo::rendezvous::Context::connectFullMesh("
+           <<", context: "<<str()
+           <<", store: "<<store.str()
+           <<", device: "<<dev->str()
+           <<")"<<std::endl;
   std::vector<char> allBytes;
 
   // Create pairs
   auto transportContext = dev->createContext(rank, size);
   transportContext->setTimeout(getTimeout());
+
+  std::cout<<"[gloo::rendezvous::Context::connectFullMesh] transport context: "<<transportContext->str()<<std::endl;
+
   for (int i = 0; i < size; i++) {
     if (i == rank) {
       continue;
     }
 
     auto& pair = transportContext->createPair(i);
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: "<<pair->str()<<std::endl;
     auto addrBytes = pair->address().bytes();
     allBytes.insert(allBytes.end(), addrBytes.begin(), addrBytes.end());
   }
@@ -62,19 +67,24 @@ void Context::connectFullMesh(
 
   // Connect every pair
   for (int i = 0; i < size; i++) {
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: connecting."<<std::endl;
     if (i == rank) {
+      std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: skipping self."<<std::endl;
       continue;
     }
 
     // Wait for address of other side of this pair to become available
     std::ostringstream key;
     key << i;
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: waiting for other side."<<std::endl;
     store.wait({key.str()}, getTimeout());
 
     // Connect to other side of this pair
     auto allAddrs = store.get(key.str());
     auto addr = extractAddress(allAddrs, i);
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: connecting, address = "<< gloo::transport::tcp::Address(addr).str()<<std::endl;
     transportContext->getPair(i)->connect(addr);
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: connected!"<<std::endl;
   }
 
   device_ = dev;
