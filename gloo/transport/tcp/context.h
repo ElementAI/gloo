@@ -36,15 +36,7 @@ class Context final : public ::gloo::transport::Context,
 
   virtual ~Context();
 
-  virtual std::string str() const {
-      std::stringstream ss;
-      ss << "gloo::transport::tcp::Context("
-        <<"rank = "<<rank
-        <<", size = "<<size
-        <<", device = "<<device_->str()
-        <<")";
-      return ss.str();
-  }
+  virtual std::string str() const;
 
   std::unique_ptr<transport::Pair>& createPair(int rank) override;
 
