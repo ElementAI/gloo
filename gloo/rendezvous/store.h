@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <sstream>
 #include <chrono>
 #include <string>
 #include <vector>

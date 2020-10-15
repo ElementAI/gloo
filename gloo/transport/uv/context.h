@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <sstream>
 #include <deque>
 #include <memory>
 #include <mutex>

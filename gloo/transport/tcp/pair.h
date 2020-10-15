@@ -8,6 +8,7 @@
 
 #pragma once
 
+#include <sstream>
 #include <atomic>
 #include <chrono>
 #include <condition_variable>

@@ -14,6 +14,7 @@
 #include <tuple>
 #include <unordered_map>
 #include <unordered_set>
+#include <sstream>
 
 #include "gloo/common/memory.h"
 #include "gloo/transport/context.h"
