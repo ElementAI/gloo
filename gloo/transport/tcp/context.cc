@@ -28,6 +28,16 @@ Context::~Context() {
   device_.reset();
 }
 
+std::string Context::str() const {
+    std::stringstream ss;
+    ss << "gloo::transport::tcp::Context("
+      <<"rank = "<<rank
+      <<", size = "<<size
+      <<", device = "<<device_->str()
+      <<")";
+    return ss.str();
+}
+
 std::unique_ptr<transport::Pair>& Context::createPair(int rank) {
   pairs_[rank] = std::unique_ptr<transport::Pair>(
       new tcp::Pair(this, device_.get(), rank, getTimeout()));
