@@ -201,7 +201,7 @@ void Pair::listen() {
   self_ = Address::fromSockName(fd);
 
   // Register with device so we're called when peer connects
-  changeState(LISTENING, Pair::listen);
+  changeState(LISTENING, "Pair::listen");
   device_->registerDescriptor(fd_, EPOLLIN, this);
 
   return;
