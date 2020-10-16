@@ -94,18 +94,7 @@ class Pair : public ::gloo::transport::Pair, public Handler {
 
   virtual ~Pair();
 
-  virtual std::string str() const {
-      std::stringstream ss;
-      ss << "gloo::transport::Pair("
-        <<"context = "<<context_->str()
-        <<", device = "<<device_->str()
-        <<", rank = "<<rank_
-        <<", timeout = "<<timeout_.count()
-        <<", state = "<<state_
-        <<", address = "<<address().str()
-        <<")";
-      return ss.str();
-  }
+  virtual std::string str() const;
   
   Pair(const Pair& that) = delete;
 
