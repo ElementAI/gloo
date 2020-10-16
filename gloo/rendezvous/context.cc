@@ -89,6 +89,7 @@ void Context::connectFullMesh(
 
   device_ = dev;
   transportContext_ = std::move(transportContext);
+  std::cout<<"[gloo::rendezvous::Context::connectFullMesh] done!: "<<std::endl;
 }
 
 ContextFactory::ContextFactory(std::shared_ptr<::gloo::Context> backingContext)
