@@ -909,8 +909,9 @@ void Pair::waitUntilConnected(
   auto timeoutSet = timeout_ != kNoTimeout;
   if (useTimeout && timeoutSet) {
     // Use a longer timeout when waiting for initial connect
-    auto done = cv_.wait_for(lock, timeout_ * 5, pred);
+    auto done = cv_.wait_for(lock, timeout_*1, pred);
     if (!done) {
+      std::cout<<GLOO_ERROR_MSG("Connect timeout ", peer_.str())<<std::endl;
       signalAndThrowException(GLOO_ERROR_MSG("Connect timeout ", peer_.str()));
     }
   } else {
@@ -931,6 +932,7 @@ void Pair::verifyConnected() {
   // Check if the socket has been closed. We were unable to tell if this was an
   // error or normal tear down, but now throw since we are trying to do IO.
   if (state_ == CLOSED) {
+      std::cout<<GLOO_ERROR_MSG("Socket closed ", peer_.str())<<std::endl;
     signalAndThrowException(GLOO_ERROR_MSG("Socket closed ", peer_.str()));
   }
 }

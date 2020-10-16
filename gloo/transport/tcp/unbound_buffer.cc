@@ -134,6 +134,9 @@ bool UnboundBuffer::waitSend(int* rank, std::chrono::milliseconds timeout) {
       // be sure to look for the actual cause (seen below).
       context_->signalException("Application timeout caused pair closure");
 
+      std::cout<<GLOO_ERROR_MSG("Timed out waiting ",
+                  timeout.count(),
+                  "ms for send operation to complete")<<std::endl;
       throw ::gloo::IoException(
           GLOO_ERROR_MSG(
               "Timed out waiting ",
