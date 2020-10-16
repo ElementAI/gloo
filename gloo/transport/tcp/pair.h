@@ -97,8 +97,8 @@ class Pair : public ::gloo::transport::Pair, public Handler {
   virtual std::string str() const {
       std::stringstream ss;
       ss << "gloo::transport::Pair("
-        <<", context = "<<context_
-        <<", device = "<<device_
+        <<"context = "<<context_->str()
+        <<", device = "<<device_->str()
         <<", rank = "<<rank_
         <<", timeout = "<<timeout_.count()
         <<", state = "<<state_

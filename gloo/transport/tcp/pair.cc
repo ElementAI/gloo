@@ -852,7 +852,8 @@ void Pair::unregisterBuffer(Buffer* buf) {
 // changeState must only be called when holding lock.
 void Pair::changeState(state nextState) noexcept {
   std::cout<<"gloo::transport::tcp::Pair::changeState("
-    <<"pair = "<<str()
+    <<"rank = "<<rank_
+    <<", address = "<<address().str()
     <<", state = "<<state_
     <<", nextState = "<<nextState
     <<")"<<std::endl;
