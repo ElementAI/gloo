@@ -208,10 +208,6 @@ void Pair::listen() {
 }
 
 void Pair::connect(const Address& peer) {
-  std::cout<<"gloo::transport::tcp::Pair::connect("
-    <<"pair = "<<str()
-    <<"peer = "<<peer.str()
-    <<")"<<std::endl;
   std::unique_lock<std::mutex> lock(m_);
   int rv;
   socklen_t addrlen;
@@ -221,6 +217,12 @@ void Pair::connect(const Address& peer) {
 
   const auto& selfAddr = self_.getSockaddr();
   const auto& peerAddr = peer_.getSockaddr();
+
+  std::cout<<"gloo::transport::tcp::Pair::connect("
+    <<"pair = "<<str()
+    <<", peer = "<<peer.str()
+    <<", ss_family = "<<selfAddr.ss_family
+    <<")"<<std::endl;
 
   // Addresses have to have same family
   if (selfAddr.ss_family != peerAddr.ss_family) {
