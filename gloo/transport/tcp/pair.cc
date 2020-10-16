@@ -75,6 +75,18 @@ Pair::~Pair() {
     changeState(CLOSED);
   }
 }
+std::string Pair::str() const {
+    std::stringstream ss;
+    ss << "gloo::transport::Pair("
+      <<"context = "<<context_->str()
+      <<", device = "<<device_->str()
+      <<", rank = "<<rank_
+      <<", timeout = "<<timeout_.count()
+      <<", state = "<<state_
+      <<", address = "<<address().str()
+      <<")";
+    return ss.str();
+}
 
 // The close function performs a "hard" close.
 // It sets SO_LINGER to reset the connection on close,
