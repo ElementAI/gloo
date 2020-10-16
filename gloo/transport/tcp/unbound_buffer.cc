@@ -9,6 +9,8 @@
 #include "gloo/transport/tcp/unbound_buffer.h"
 
 #include <stdexcept>
+#include <iostream>
+#include <sstream>
 
 #include "gloo/common/error.h"
 #include "gloo/common/logging.h"
@@ -77,6 +79,9 @@ bool UnboundBuffer::waitRecv(int* rank, std::chrono::milliseconds timeout) {
       // be sure to look for the actual cause (seen below).
       context_->signalException("Application timeout caused pair closure");
 
+      std::cout<<GLOO_ERROR_MSG("Timed out waiting ",
+                  timeout.count(),
+                  "ms for recv operation to complete")<<std::endl;
       throw ::gloo::IoException(
               GLOO_ERROR_MSG(
                   "Timed out waiting ",
