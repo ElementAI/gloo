@@ -290,7 +290,7 @@ class Pair : public ::gloo::transport::Pair, public Handler {
   //
   // The pair mutex is expected to be held when called.
   //
-  void changeState(state nextState) noexcept;
+  void changeState(state nextState, std::string reason) noexcept;
 
   // Helper function to block execution until the pair has advanced to
   // the `CONNECTED` state. Expected to be called from `Pair::connect`.

@@ -72,7 +72,7 @@ Pair::~Pair() {
   // underlying file descriptor on the device thread.
   std::lock_guard<std::mutex> lock(m_);
   if (state_ != CLOSED) {
-    changeState(CLOSED);
+    changeState(CLOSED, "Pair::~Pair");
   }
 }
 std::string Pair::str() const {
@@ -102,7 +102,7 @@ void Pair::close() {
       sl.l_linger = 0;
       setsockopt(fd_, SOL_SOCKET, SO_LINGER, &sl, sizeof(sl));
     }
-    changeState(CLOSED);
+    changeState(CLOSED, "Pair::close");
   }
 }
 
@@ -201,7 +201,7 @@ void Pair::listen() {
   self_ = Address::fromSockName(fd);
 
   // Register with device so we're called when peer connects
-  changeState(LISTENING);
+  changeState(LISTENING, Pair::listen);
   device_->registerDescriptor(fd_, EPOLLIN, this);
 
   return;
@@ -290,7 +290,7 @@ void Pair::connect(const Address& peer) {
   }
 
   // Register with device so we're called when connection completes.
-  changeState(CONNECTING);
+  changeState(CONNECTING, "Pair::connect");
   device_->registerDescriptor(fd_, EPOLLIN | EPOLLOUT, this);
 
   // Wait for connection to complete
@@ -821,7 +821,7 @@ void Pair::handleConnected() {
   GLOO_ENFORCE_NE(rv, -1);
 
   device_->registerDescriptor(fd_, EPOLLIN, this);
-  changeState(CONNECTED);
+  changeState(CONNECTED, "Pair::handleConnected");
 }
 
 // getBuffer must only be called when holding lock.
@@ -862,10 +862,11 @@ void Pair::unregisterBuffer(Buffer* buf) {
 }
 
 // changeState must only be called when holding lock.
-void Pair::changeState(state nextState) noexcept {
+void Pair::changeState(state nextState, std::string reason) noexcept {
   std::cout<<"gloo::transport::tcp::Pair::changeState("
     <<"rank = "<<rank_
     <<", address = "<<address().str()
+    <<", reason = "<<reason
     <<", state = "<<state_
     <<", nextState = "<<nextState
     <<")"<<std::endl;
@@ -1237,7 +1238,7 @@ void Pair::signalException(std::exception_ptr ex) {
   // Either this error is an underlying socket error and the socket
   // must be closed, or this error is an application side timeout, and
   // we are no longer guaranteed that buffer pointers will be valid.
-  changeState(CLOSED);
+  changeState(CLOSED, "Pair::signalException");
 }
 
 void Pair::signalAndThrowException(const std::string& msg) {
