@@ -76,7 +76,7 @@ void Context::connectFullMesh(
     // Wait for address of other side of this pair to become available
     std::ostringstream key;
     key << i;
-    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: waiting for other side."<<std::endl;
+    std::cout<<"[gloo::rendezvous::Context::connectFullMesh] pairs["<<i<<"]: waiting for other side, key = "<<key.str()<<std::endl;
     store.wait({key.str()}, getTimeout());
 
     // Connect to other side of this pair
