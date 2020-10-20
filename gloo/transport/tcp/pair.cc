@@ -756,11 +756,13 @@ void Pair::handleEvents(int events) {
 }
 
 void Pair::handleListening() {
+  std::cout<<"gloo::transport::tcp::Pair::handleListening()"<<std::endl;
   struct sockaddr_storage addr;
   socklen_t addrlen = sizeof(addr);
   int rv;
 
   rv = accept(fd_, (struct sockaddr*)&addr, &addrlen);
+  std::cout<<"[gloo::transport::tcp::Pair::handleListening] rv = "<< rv<<std::endl;
 
   // Close the listening file descriptor whether we've successfully connected
   // or run into an error and will throw an exception.
@@ -781,12 +783,14 @@ void Pair::handleListening() {
 }
 
 void Pair::handleConnecting() {
+  std::cout<<"gloo::transport::tcp::Pair::handleConnecting()"<<std::endl;
   int optval;
   socklen_t optlen = sizeof(optval);
   int rv;
 
   // Verify that connecting was successful
   rv = getsockopt(fd_, SOL_SOCKET, SO_ERROR, &optval, &optlen);
+  std::cout<<"[gloo::transport::tcp::Pair::handleConnecting] rv = "<<rv<<std::endl;
   GLOO_ENFORCE_NE(rv, -1);
   if (optval != 0) {
     signalException(
@@ -799,6 +803,7 @@ void Pair::handleConnecting() {
 }
 
 void Pair::handleConnected() {
+  std::cout<<"gloo::transport::tcp::Pair::handleConnected()"<<std::endl;
   int rv;
 
   // Reset addresses
