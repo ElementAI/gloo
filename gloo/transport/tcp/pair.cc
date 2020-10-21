@@ -787,6 +787,7 @@ void Pair::handleListening() {
   int rv;
 
   rv = accept(fd_, (struct sockaddr*)&addr, &addrlen);
+
   std::stringstream ss;
   ss << ((struct sockaddr*)&addr)->sa_data;
   accepted_addr=ss.str();
@@ -966,9 +967,10 @@ void Pair::waitUntilConnected(
   auto timeoutSet = timeout_ != kNoTimeout;
   if (useTimeout && timeoutSet) {
     // Use a longer timeout when waiting for initial connect
-    auto done = cv_.wait_for(lock, timeout_*1, pred);
+    auto done = cv_.wait_for(lock, timeout_*0.5, pred);
     if (!done) {
       std::cout<<GLOO_ERROR_MSG("Connect timeout ", peer_.str())<<std::endl;
+      handleListening();
       signalAndThrowException(GLOO_ERROR_MSG("Connect timeout ", peer_.str()));
     }
   } else {
