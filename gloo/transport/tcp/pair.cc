@@ -836,15 +836,17 @@ void Pair::handleConnecting() {
 }
 
 void Pair::handleConnected() {
-  std::cout<<"gloo::transport::tcp::Pair::handleConnected("
-    <<"rank = "<<rank_
-    <<")"<<std::endl;
   int rv;
 
   // Reset addresses
   self_ = Address::fromSockName(fd_);
   peer_ = Address::fromPeerName(fd_);
 
+  std::cout<<"gloo::transport::tcp::Pair::handleConnected("
+    <<"rank = "<<rank_
+    <<", self = "<<self_.str()
+    <<", peer = "<<peer_.str()
+    <<")"<<std::endl;
   // Make sure socket is non-blocking
   setSocketBlocking(fd_, false);
 
