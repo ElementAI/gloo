@@ -702,8 +702,16 @@ void Pair::handleEvents(int events) {
   // CLOSED state). To avoid deadlocks, attempt to lock the pair and
   // skip handling the events until the next tick if the lock cannot
   // be acquired.
+  std::cout<<"gloo::transport::tcp::Pair::handleEvents("
+    <<"rank = "<<rank_
+    <<"events = "<<events
+    <<")"<<std::endl;
   std::unique_lock<std::mutex> lock(m_, std::try_to_lock);
   if (!lock) {
+    std::cout<<"[gloo::transport::tcp::Pair::handleEvents("
+      <<"rank = "<<rank_
+      <<"events = "<<events
+      <<")]: cannot acquire lock."<<std::endl;
     return;
   }
 
@@ -756,7 +764,9 @@ void Pair::handleEvents(int events) {
 }
 
 void Pair::handleListening() {
-  std::cout<<"gloo::transport::tcp::Pair::handleListening()"<<std::endl;
+  std::cout<<"gloo::transport::tcp::Pair::handleListening("
+    <<"rank = "<<rank_
+    <<")"<<std::endl;
   struct sockaddr_storage addr;
   socklen_t addrlen = sizeof(addr);
   int rv;
@@ -783,7 +793,9 @@ void Pair::handleListening() {
 }
 
 void Pair::handleConnecting() {
-  std::cout<<"gloo::transport::tcp::Pair::handleConnecting()"<<std::endl;
+  std::cout<<"gloo::transport::tcp::Pair::handleConnecting("
+    <<"rank = "<<rank_
+    <<")"<<std::endl;
   int optval;
   socklen_t optlen = sizeof(optval);
   int rv;
@@ -803,7 +815,9 @@ void Pair::handleConnecting() {
 }
 
 void Pair::handleConnected() {
-  std::cout<<"gloo::transport::tcp::Pair::handleConnected()"<<std::endl;
+  std::cout<<"gloo::transport::tcp::Pair::handleConnected("
+    <<"rank = "<<rank_
+    <<")"<<std::endl;
   int rv;
 
   // Reset addresses
@@ -1199,11 +1213,17 @@ std::exception_ptr Pair::signalExceptionExternal(const std::string& msg) {
 }
 
 void Pair::signalException(const std::string& msg) {
-  std::cout<<"Signal exception: "<<msg<<std::endl;
+  std::cout<<"gloo::transport::tcp::Pair::signalException("
+    <<"rank = "<<rank_
+    <<"msg = "<<rank_
+    <<")"<<std::endl;
   signalException(std::make_exception_ptr(::gloo::IoException(msg)));
 }
 
 void Pair::signalException(std::exception_ptr ex) {
+  std::cout<<"gloo::transport::tcp::Pair::signalException("
+    <<"rank = "<<rank_
+    <<")"<<std::endl;
   GLOO_ENFORCE(ex_ == nullptr);
 
   // Loop through the buffers and signal that an error has occurred.
