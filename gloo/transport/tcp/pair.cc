@@ -267,8 +267,11 @@ void Pair::connect(const Address& peer) {
         <<", accepted_addr_peer ="<<Address::fromPeerName(fd_).str()
         <<std::endl;
     if(peer_.str()!=Address::fromPeerName(fd_).str()){
-      std::cout<<"Accepted wrong peer, "<< Address::fromPeerName(fd_).str()<< ", expected "<< peer_.str();
+      std::cout<<"Accepted wrong peer, "<< Address::fromPeerName(fd_).str()<< ", expected "<< peer_.str()<<", hosts"<<peer_.str_host()<<Address::fromPeerName(fd_).str_host()<<std::endl;
       //signalAndThrowException(GLOO_ERROR_MSG("Accepted wrong peer, ", Address::fromPeerName(fd_).str(), ", expected ", peer_.str()));
+    }
+    if(peer_.str_host()!=Address::fromPeerName(fd_).str_host()){
+      signalAndThrowException(GLOO_ERROR_MSG("Accepted wrong peer host, ", Address::fromPeerName(fd_).str_host(), ", expected ", peer_.str_host()));
     }
     return;
   }
