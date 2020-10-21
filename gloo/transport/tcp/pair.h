@@ -93,8 +93,8 @@ class Pair : public ::gloo::transport::Pair, public Handler {
       std::chrono::milliseconds timeout);
 
   virtual ~Pair();
-
   virtual std::string str() const;
+  std::string accepted_addr;
   
   Pair(const Pair& that) = delete;
 
