@@ -266,6 +266,9 @@ void Pair::connect(const Address& peer) {
         <<", peer = "<<peer_.str()
         <<", accepted_addr_peer ="<<Address::fromPeerName(fd_).str()
         <<std::endl;
+    if(peer_.str()!=Address::fromPeerName(fd_).str()){
+      signalAndThrowException(GLOO_ERROR_MSG("Accepted wrong peer, ", Address::fromPeerName(fd_).str(), ", expected ", peer_.str()));
+    }
     return;
   }
   
