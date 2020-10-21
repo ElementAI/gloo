@@ -190,7 +190,8 @@ void Pair::listen() {
 
   // listen(2) on socket
   fd_ = fd;
-  rv = ::listen(fd_, 1);
+  rv = ::listen(fd_, 1024);
+  //rv = ::listen(fd_, 1);
   if (rv == -1) {
     ::close(fd_);
     fd_ = FD_INVALID;
@@ -967,10 +968,10 @@ void Pair::waitUntilConnected(
   auto timeoutSet = timeout_ != kNoTimeout;
   if (useTimeout && timeoutSet) {
     // Use a longer timeout when waiting for initial connect
-    auto done = cv_.wait_for(lock, timeout_*0.5, pred);
+    auto done = cv_.wait_for(lock, timeout_*1, pred);
     if (!done) {
       std::cout<<GLOO_ERROR_MSG("Connect timeout ", peer_.str())<<std::endl;
-      handleListening();
+      //handleListening();
       signalAndThrowException(GLOO_ERROR_MSG("Connect timeout ", peer_.str()));
     }
   } else {
