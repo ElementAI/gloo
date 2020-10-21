@@ -1199,6 +1199,7 @@ std::exception_ptr Pair::signalExceptionExternal(const std::string& msg) {
 }
 
 void Pair::signalException(const std::string& msg) {
+  std::cout<<"Signal exception: "<<msg<<std::endl;
   signalException(std::make_exception_ptr(::gloo::IoException(msg)));
 }
 
