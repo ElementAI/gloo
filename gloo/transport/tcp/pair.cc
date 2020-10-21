@@ -218,12 +218,6 @@ void Pair::connect(const Address& peer) {
   const auto& selfAddr = self_.getSockaddr();
   const auto& peerAddr = peer_.getSockaddr();
 
-  std::cout<<"gloo::transport::tcp::Pair::connect("
-    <<"pair = "<<str()
-    <<", peer = "<<peer.str()
-    <<", ss_family = "<<selfAddr.ss_family
-    <<")"<<std::endl;
-
   // Addresses have to have same family
   if (selfAddr.ss_family != peerAddr.ss_family) {
     GLOO_THROW_INVALID_OPERATION_EXCEPTION("address family mismatch");
@@ -253,11 +247,19 @@ void Pair::connect(const Address& peer) {
     GLOO_THROW_INVALID_OPERATION_EXCEPTION("cannot connect to self");
   }
 
+  std::cout<<"gloo::transport::tcp::Pair::connect("
+    <<"pair = "<<str()
+    <<", peer = "<<peer.str()
+    <<", ss_family = "<<selfAddr.ss_family
+    <<", selfAddr = "<< ((struct sockaddr*)&selfAddr)->sa_data 
+    <<", peerAddr = "<< ((struct sockaddr*)&peerAddr)->sa_data 
+    <<")"<<std::endl;
+
   // self_ < peer_; we are listening side.
   if (rv < 0) {
     std::cout<<"[gloo::transport::tcp::Pair::connect] listening side, waiting for other side to connect."<<std::endl;
     waitUntilConnected(lock, true);
-    std::cout<<"[gloo::transport::tcp::Pair::connect] connection established."<<std::endl;
+    std::cout<<"[gloo::transport::tcp::Pair::connect] connection established, accepted_addr ="<<accepted_addr<<std::endl;
     return;
   }
   
@@ -771,8 +773,14 @@ void Pair::handleListening() {
   socklen_t addrlen = sizeof(addr);
   int rv;
 
+  std::stringstream ss;
+  ss << ((struct sockaddr*)&addr)->sa_data;
+  accepted_addr=ss.str();
   rv = accept(fd_, (struct sockaddr*)&addr, &addrlen);
-  std::cout<<"[gloo::transport::tcp::Pair::handleListening] rv = "<< rv<<std::endl;
+  std::cout<<"[gloo::transport::tcp::Pair::handleListening]"
+      <<"rv = "<< rv
+      <<", addr = "<< accepted_addr
+      <<std::endl;
 
   // Close the listening file descriptor whether we've successfully connected
   // or run into an error and will throw an exception.
