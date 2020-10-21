@@ -249,7 +249,8 @@ void Pair::connect(const Address& peer) {
 
   std::cout<<"gloo::transport::tcp::Pair::connect("
     <<"pair = "<<str()
-    <<", peer = "<<peer.str()
+    <<", self = "<<self_.str()
+    <<", peer = "<<peer_.str()
     <<", ss_family = "<<selfAddr.ss_family
     <<", selfAddr = "<< ((struct sockaddr*)&selfAddr)->sa_data 
     <<", peerAddr = "<< ((struct sockaddr*)&peerAddr)->sa_data 
@@ -261,7 +262,9 @@ void Pair::connect(const Address& peer) {
     waitUntilConnected(lock, true);
     std::cout<<"[gloo::transport::tcp::Pair::connect] connection established"
         <<", accepted_addr ="<<accepted_addr
-        <<", accepted_addr_fd ="<<Address::fromPeerName(fd_).str()
+        <<", self = "<<self_.str()
+        <<", peer = "<<peer_.str()
+        <<", accepted_addr_peer ="<<Address::fromPeerName(fd_).str()
         <<std::endl;
     return;
   }
