@@ -259,7 +259,10 @@ void Pair::connect(const Address& peer) {
   if (rv < 0) {
     std::cout<<"[gloo::transport::tcp::Pair::connect] listening side, waiting for other side to connect."<<std::endl;
     waitUntilConnected(lock, true);
-    std::cout<<"[gloo::transport::tcp::Pair::connect] connection established, accepted_addr ="<<accepted_addr<<std::endl;
+    std::cout<<"[gloo::transport::tcp::Pair::connect] connection established"
+        <<", accepted_addr ="<<accepted_addr
+        <<", accepted_addr_fd ="<<Address::fromPeerName(fd_).str()
+        <<std::endl;
     return;
   }
   
@@ -704,16 +707,16 @@ void Pair::handleEvents(int events) {
   // CLOSED state). To avoid deadlocks, attempt to lock the pair and
   // skip handling the events until the next tick if the lock cannot
   // be acquired.
-  std::cout<<"gloo::transport::tcp::Pair::handleEvents("
-    <<"rank = "<<rank_
-    <<"events = "<<events
-    <<")"<<std::endl;
+  //std::cout<<"gloo::transport::tcp::Pair::handleEvents("
+  //  <<"rank = "<<rank_
+  //  <<"events = "<<events
+  //  <<")"<<std::endl;
   std::unique_lock<std::mutex> lock(m_, std::try_to_lock);
   if (!lock) {
-    std::cout<<"[gloo::transport::tcp::Pair::handleEvents("
-      <<"rank = "<<rank_
-      <<"events = "<<events
-      <<")]: cannot acquire lock."<<std::endl;
+    //std::cout<<"[gloo::transport::tcp::Pair::handleEvents("
+    //  <<"rank = "<<rank_
+    //  <<"events = "<<events
+    //  <<")]: cannot acquire lock."<<std::endl;
     return;
   }
 
