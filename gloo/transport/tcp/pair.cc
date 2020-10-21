@@ -786,10 +786,10 @@ void Pair::handleListening() {
   socklen_t addrlen = sizeof(addr);
   int rv;
 
+  rv = accept(fd_, (struct sockaddr*)&addr, &addrlen);
   std::stringstream ss;
   ss << ((struct sockaddr*)&addr)->sa_data;
   accepted_addr=ss.str();
-  rv = accept(fd_, (struct sockaddr*)&addr, &addrlen);
   std::cout<<"[gloo::transport::tcp::Pair::handleListening]"
       <<"rv = "<< rv
       <<", addr = "<< accepted_addr
