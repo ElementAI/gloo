@@ -69,6 +69,32 @@ std::string Address::str() const {
   return str;
 }
 
+std::string Address::str_host() const {
+  char str[INET6_ADDRSTRLEN + 128];
+  int port = 0;
+
+  str[0] = '[';
+  if (impl_.ss.ss_family == AF_INET) {
+    struct sockaddr_in* in = (struct sockaddr_in*)&impl_.ss;
+    inet_ntop(AF_INET, &in->sin_addr, str + 1, sizeof(str) - 1);
+  } else if (impl_.ss.ss_family == AF_INET6) {
+    struct sockaddr_in6* in6 = (struct sockaddr_in6*)&impl_.ss;
+    inet_ntop(AF_INET6, &in6->sin6_addr, str + 1, sizeof(str) - 1);
+  } else {
+    snprintf(str + 1, sizeof(str) - 1, "none");
+  }
+
+  size_t len = strlen(str);
+  len += snprintf(str + len, sizeof(str) - len, "]");
+
+  // Append sequence number if one is set.
+  if (impl_.seq != kSequenceNumberUnset) {
+    len += snprintf(str + len, sizeof(str) - len, "$%ld", impl_.seq);
+  }
+
+  return str;
+}
+
 Address Address::fromSockName(int fd) {
   struct sockaddr_storage ss;
   socklen_t addrlen = sizeof(ss);

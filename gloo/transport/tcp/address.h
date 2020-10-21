@@ -35,6 +35,7 @@ class Address : public ::gloo::transport::Address {
 
   virtual std::string str() const override;
 
+  virtual std::string str_host() const;
   const struct sockaddr_storage& getSockaddr() const {
     return impl_.ss;
   }
