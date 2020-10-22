@@ -190,8 +190,8 @@ void Pair::listen() {
 
   // listen(2) on socket
   fd_ = fd;
-  rv = ::listen(fd_, 1024);
-  //rv = ::listen(fd_, 1);
+  //rv = ::listen(fd_, 1024);
+  rv = ::listen(fd_, 1);
   if (rv == -1) {
     ::close(fd_);
     fd_ = FD_INVALID;
@@ -804,6 +804,11 @@ void Pair::handleListening() {
   fd_ = FD_INVALID;
 
   if (rv == -1) {
+    std::cout<<"[gloo::transport::tcp::Pair::handleListening]"
+        <<"rv = "<< rv
+        <<", addr = "<< accepted_addr
+        <<", error = "<<strerror(errno)
+        <<std::endl;
     signalException(GLOO_ERROR_MSG("accept: ", strerror(errno)));
     return;
   }
