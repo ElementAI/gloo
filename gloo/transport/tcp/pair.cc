@@ -976,7 +976,7 @@ void Pair::waitUntilConnected(
     auto done = cv_.wait_for(lock, timeout_*1, pred);
     if (!done) {
       std::cout<<GLOO_ERROR_MSG("Connect timeout ", peer_.str())<<std::endl;
-      handleListening();
+      //handleListening();
       signalAndThrowException(GLOO_ERROR_MSG("Connect timeout ", peer_.str()));
     }
   } else {
