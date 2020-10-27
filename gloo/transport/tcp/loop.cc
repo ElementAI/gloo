@@ -79,7 +79,7 @@ void Loop::run() {
     }
 
     GLOO_ENFORCE_NE(nfds, -1);
-    std::cout<<"gloo::transport::tcp::Loop::run, nfds = "<<nfds<<std::endl;
+    //std::cout<<"gloo::transport::tcp::Loop::run, nfds = "<<nfds<<std::endl;
     for (int i = 0; i < nfds; i++) {
       Handler* h = reinterpret_cast<Handler*>(events[i].data.ptr);
       h->handleEvents(events[i].events);
